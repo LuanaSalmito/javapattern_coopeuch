@@ -1,172 +1,126 @@
-# Configuração do Checkstyle no Gradle para Padronização de Código
+# Guía de Estándares de Código Java
 
-## Introdução
 
-Este guia descreve como configurar o **Checkstyle** em um projeto Gradle, de forma a garantir que todo o código-fonte siga um padrão de formatação. Além disso, ele inclui instruções para garantir que as IDEs (Eclipse, IntelliJ e VSCode) também utilizem as mesmas regras de formatação definidas no Checkstyle.
+> Esta guía establece los estándares de codificación para asegurar la consistencia, calidad y facilidad de migración en el desarrollo de aplicaciones Java, garantizando que el código sea comprensible y manejable para todo el equipo de desarrollo, independientemente de la IDE que se utilice.
 
-### Passos
+ 
+### Estándar de Codificación Utilizado
 
-1. **Adicionar o plugin do Checkstyle ao Gradle**
-2. **Criar o arquivo de configuração do Checkstyle**
-3. **Configurar as IDEs para usar as regras do Checkstyle**
+> Para garantizar la consistencia y calidad del código, seguimos las **Java Code Conventions** establecidas por Oracle. Estas convenciones abordan las mejores prácticas de formateo, nomenclatura y organización del código.
 
----
+> La especificación completa está disponible en: [Java Code Conventions - Oracle](https://www.oracle.com/java/technologies/javase/codeconventions-introduction.html).
 
-## 1. Adicionando o Plugin Checkstyle ao Gradle
+#### Uso do Checkstyle
 
-Primeiramente, adicione o plugin do Checkstyle ao seu arquivo `build.gradle` para habilitar a execução do Checkstyle durante a build do projeto.
+> Checkstyle es una herramienta que ayuda a garantizar la consistencia y calidad del código, validando si sigue las reglas de estilo predefinidas. Se puede integrar tanto en el proceso de build de Gradle como en las principales IDEs (Eclipse, IntelliJ IDEA y VSCode).
 
-### Exemplo de `build.gradle` (Groovy DSL)
+#### Configuración de Checkstyle
 
-```groovy
-plugins {
-    id 'java'
-    id 'checkstyle'  
-}
+> Checkstyle depende de un archivo de configuración, normalmente llamado checkstyle.xml, que define las reglas de formateo y estilo del código. Este archivo puede ser utilizado de manera consistente en todas las herramientas para garantizar que todos los desarrolladores sigan las mismas convenciones de estilo.
+	
+#### Integración con Gradle
 
-checkstyle {
-    toolVersion = "10.12.4"
-    configFile = file('config/checkstyle/checkstyle.xml') 
-}
+> Para integrar Checkstyle en Gradle, agrega el plugin Checkstyle al archivo build.gradle y apunta al archivo checkstyle.xml que contiene las reglas.
 
-tasks.withType(Checkstyle) {
-  
-    reports {
-        xml.enabled = false 
-        html.enabled = true  
-        html.destination file("$buildDir/reports/checkstyle/main.html") 
-    }
-}
+#### Ejemplo de archivo checkstyle.xml (común a todas las IDEs)
 
-#### Exemplo de build.gradle.kts (Kotlin DSL)
-kotlin
-
-```bash
-plugins {
-    java
-    checkstyle
-}
-```bash
-checkstyle {
-    toolVersion = "10.3" 
-    configFile = file("config/checkstyle/checkstyle.xml") 
-}
-```bash
-tasks.withType<Checkstyle> {
-    reports {
-        xml.isEnabled = false  /
-        html.isEnabled = true  
-        html.destination = file("$buildDir/reports/checkstyle/main.html") 
-    }
-}
-
----
-
-##  2. Criando o Arquivo de Configuração do Checkstyle
-
-### Agora, crie o arquivo de configuração do Checkstyle. O arquivo checkstyle.xml define as regras de formatação que serão utilizadas.
-
-Exemplo de checkstyle.xml
-Crie o arquivo checkstyle.xml na pasta config/checkstyle/ (crie as pastas, se necessário).
-
-xml
-0
+``` bash
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE module PUBLIC "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN" "http://checkstyle.sourceforge.net/dtds/configuration_1_3.dtd">
-<module name="Checker">
-    <!-- Definir as regras de formatação -->
-    <module name="TreeWalker">
-        <!-- Definir as regras de verificação do código -->
-        
-        <!-- Verificar o uso de chaves para blocos -->
-        <module name="RedundantModifier"/>
-        
-        <!-- Verificar convenções de nomeação -->
-        <module name="NamingConvention">
+<!DOCTYPE module PUBLIC "-//CHECKSTYLE//DTD Checkstyle Configuration 1.3//EN" "http://checkstyle.sourceforge.net/dtds/configuration_1_3.dtd">
+
+<configuration>
+
+    <!-- Definiendo reglas generales de Checkstyle -->
+    <module name="Checker">
+
+        <!-- Longitud de línea: Limita a 100 caracteres para facilitar la lectura, pero sin exceder 80 cuando sea posible -->
+        <module name="LineLength">
+            <property name="max" value="100"/>
+        </module>
+
+        <!-- Indentación: Usando 4 espacios, como recomienda Oracle -->
+        <module name="Indentation">
+            <property name="tabWidth" value="4"/>
+            <property name="indentation" value="4"/>
+        </module>
+
+        <!-- Reglas para los espacios en blanco alrededor de los operadores -->
+        <module name="WhitespaceAround">
+            <property name="checkSpaceBefore" value="true"/>
+            <property name="checkSpaceAfter" value="true"/>
+        </module>
+
+        <!-- Verificar el uso adecuado de Javadoc en métodos y clases -->
+        <module name="JavadocStyle">
+            <property name="allowMissingJavadoc" value="false"/>
+            <property name="minLines" value="1"/>
+        </module>
+
+        <!-- Verificar la convención de nombres de paquetes (minúsculas y estructura jerárquica) -->
+        <module name="PackageName">
+            <property name="format" value="^[a-z]+([.][a-z][a-z0-9_]*)*$"/>
+        </module>
+
+        <!-- Organizar las importaciones con reglas específicas -->
+        <module name="ImportOrder">
+            <property name="groups" value="javax, java, org, com"/>
+            <property name="separated" value="true"/>
+            <property name="ordered" value="true"/>
+        </module>
+
+        <!-- Definir convenciones para el nombre de métodos (camelCase) -->
+        <module name="MethodName">
             <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
         </module>
 
-        <!-- Verificar espaços em branco -->
-        <module name="WhitespaceAround">
-            <property name="format" value="\\s+" />
+        <!-- Definir convenciones para el nombre de clases (PascalCase) -->
+        <module name="TypeName">
+            <property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
         </module>
 
-        <!-- Verificar o comprimento das linhas -->
-        <module name="LineLength">
-            <property name="max" value="120"/>
+        <!-- Los nombres de las variables deben usar la convención camelCase -->
+        <module name="VariableName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
         </module>
 
-        <!-- Verificar a indentação -->
-        <module name="Indentation">
-            <property name="basicOffset" value="4"/>
-            <property name="braceAdjustment" value="4"/>
-            <property name="lineWrapping" value="120"/>
+        <!-- Verificar el orden de los modificadores de acceso y la visibilidad de las clases -->
+        <module name="ModifiersOrder"/>
+
+        <!-- Limitar la complejidad de los métodos y funciones para evitar métodos demasiado complejos -->
+        <module name="CyclomaticComplexity">
+            <property name="threshold" value="10"/>
         </module>
 
-        <!-- Outras regras de qualidade -->
-        <module name="FinalLocalVariable"/>
-        <module name="FileTabCharacter"/>
+        <!-- Regla para garantizar que los archivos no sean excesivamente grandes -->
+        <module name="FileLength">
+            <property name="max" value="1000"/>
+        </module>
+
+        <!-- Validar que el código no utilice caracteres tabulados (tab) para la indentación -->
+        <module name="FileTabCharacter">
+            <property name="useSpace" value="true"/>
+        </module>
+
+        <!-- Garantizar que haya una clase por archivo (Java) -->
+        <module name="SingleClassFile"/>
+
+        <!-- Asegurar que las clases tengan al menos una línea en blanco después de las importaciones -->
+        <module name="SeparatorLine">
+            <property name="lineCount" value="1"/>
+        </module>
+
     </module>
-</module>
-Esse arquivo contém algumas das regras mais comuns para garantir um código bem formatado e consistente. Sinta-se à vontade para personalizar de acordo com as necessidades da sua equipe.
 
-3. Configurando as IDEs
-Eclipse
-Para configurar o Checkstyle no Eclipse, siga os passos abaixo:
+</configuration>
 
-Instale o plugin Checkstyle para Eclipse.
 
-Acesse: Help > Eclipse Marketplace e procure por "Checkstyle".
-Instale o plugin e reinicie o Eclipse.
-Adicione a configuração do Checkstyle ao Eclipse:
 
-No Eclipse, vá para Window > Preferences.
-Navegue até Checkstyle > New Configuration.
-Selecione a opção "External configuration file" e aponte para o arquivo checkstyle.xml do seu projeto (ex: config/checkstyle/checkstyle.xml).
-Para rodar o Checkstyle, clique com o botão direito no seu projeto e selecione Checkstyle > Check Code with Checkstyle.
+## Configuración en las IDEs 
+> Para identificar la configuración necesaria para tu IDE, haz clic en la IDE que usas y sigue el paso a paso. 
 
-IntelliJ IDEA
-No IntelliJ IDEA, você pode configurar o Checkstyle da seguinte forma:
 
-Instale o plugin Checkstyle-IDEA:
+- [VisualStudioCode](./vscode.md)
+- [Intellij](./intellij.md) 
+- [Eclipse](./eclispe.md)
 
-Vá para File > Settings > Plugins > Marketplace, procure por "Checkstyle" e instale o plugin.
-Configure o Checkstyle:
 
-Vá para File > Settings > Code Style > Checkstyle.
-Adicione o arquivo de configuração do Checkstyle apontando para config/checkstyle/checkstyle.xml.
-Agora, você pode rodar o Checkstyle diretamente da IDE.
-
-VSCode
-Para configurar o Checkstyle no VSCode, use a extensão Checkstyle for Java:
-
-Instale a extensão Checkstyle for Java:
-
-Vá para a aba de Extensões no VSCode (Ctrl+Shift+X).
-Procure por "Checkstyle for Java" e instale.
-Configure o Checkstyle:
-
-Crie ou edite o arquivo .vscode/settings.json no seu projeto, com o seguinte conteúdo:
-json
-Copiar código
-{
-  "checkstyle.configuration": "config/checkstyle/checkstyle.xml"
-}
-Agora, o Checkstyle será executado automaticamente sempre que você salvar os arquivos.
-Conclusão
-Com as configurações acima, seu projeto estará pronto para garantir que as regras de formatação sejam seguidas de forma consistente em todas as builds realizadas pelo Gradle, além de ser integrado com as IDEs Eclipse, IntelliJ IDEA e VSCode. Isso permite que a equipe tenha uma padronização de código consistente, independentemente da ferramenta utilizada.
-
-yaml
-Copiar código
-
----
-
-### Explicações Adicionais
-
-- **Plugin Checkstyle no Gradle**: O plugin permite que o Checkstyle seja executado durante a construção do projeto. Você pode configurar para gerar relatórios em HTML ou XML.
-  
-- **Arquivo `checkstyle.xml`**: Define as regras de formatação. As regras são adaptáveis, então a equipe pode ajustar conforme necessário. 
-
-- **Integração com as IDEs**: Cada IDE tem um processo semelhante para importar o arquivo de configuração do Checkstyle, garantindo que todos usem as mesmas regras de estilo.
-
-Esse processo garante que todos os membros da equipe sigam as mesmas convenções de código, independentemente da IDE que utilizam.
