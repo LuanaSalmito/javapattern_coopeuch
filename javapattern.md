@@ -22,6 +22,15 @@
 
 > Para integrar Checkstyle en Gradle, agrega el plugin Checkstyle al archivo build.gradle y apunta al archivo checkstyle.xml que contiene las reglas.
 
+## Configuración en las IDEs 
+> Para identificar la configuración necesaria para tu IDE, haz clic en la IDE que usas y sigue el paso a paso. 
+
+
+- [VisualStudioCode](./vscode.md)
+- [Intellij](./intellij.md) 
+- [Eclipse](./eclispe.md)
+
+
 #### Ejemplo de archivo checkstyle.xml (común a todas las IDEs)
 
 ``` bash
@@ -113,14 +122,5 @@
 
 </configuration>
 
-
-
-## Configuración en las IDEs 
-> Para identificar la configuración necesaria para tu IDE, haz clic en la IDE que usas y sigue el paso a paso. 
-
-
-- [VisualStudioCode](./vscode.md)
-- [Intellij](./intellij.md) 
-- [Eclipse](./eclispe.md)
 
 
