@@ -4,7 +4,7 @@
 
 * Abre Visual Studio Code.
 
-* Ve a la barra lateral izquierda y haz clic en el ícono de Extensiones (o presiona Ctrl+Shift+X).
+* Ve a la barra lateral izquierda y haz clic en el ícono de Extensiones (o presiona Ctrl+Shift+X en Windows/Linux).
 
 * En la barra de búsqueda, escribe Checkstyle for Java.
 
@@ -15,12 +15,11 @@
 
 **2. Configurar o Checkstyle com o Arquivo Existente**
 
-* Abre la paleta de comandos de VSCode (presiona Ctrl+Shift+P o Cmd+Shift+P en macOS).
+* Abre la paleta de comandos (Ctrl+Shift+P en Windows/Linux).
 
 * Escribe Checkstyle: Configure y selecciona la opción Checkstyle: Configure.
 
 * Selecciona Use an existing checkstyle.xml.
-
 
 * Navega hasta el archivo checkstyle.xml que ya tienes y selecciónalo.
 
@@ -31,7 +30,7 @@
 
 **3. Ejecutar la Verificación de Checkstyle**
 
-- Después de configurar el archivo checkstyle.xml, ve a la paleta de comandos (Ctrl+Shift+P o Cmd+Shift+P en macOS).
+- Después de configurar el archivo checkstyle.xml, abre la paleta de comandos (Ctrl+Shift+P en Windows/Linux).
 
 - Escribe Checkstyle: Check y selecciona la opción Checkstyle: Check para ejecutar la verificación.
 
@@ -50,7 +49,7 @@
 
 - La extensión de Checkstyle también permite configurar la verificación automática al guardar los archivos.
 
-- Para habilitar esta configuración: Ve a las configuraciones de VSCode (File > Preferences > Settings).
+- Para habilitar esta configuración: Ve a las configuraciones de VSCode (Archivo > Preferencias > Configuración en Windows/Linux).
 
 - Busca "Checkstyle" y activa la opción Check on Save.
 

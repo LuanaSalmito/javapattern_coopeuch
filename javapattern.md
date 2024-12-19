@@ -1,26 +1,166 @@
 # Guía de Estándares de Código Java
 
-
 > Esta guía establece los estándares de codificación para asegurar la consistencia, calidad y facilidad de migración en el desarrollo de aplicaciones Java, garantizando que el código sea comprensible y manejable para todo el equipo de desarrollo, independientemente de la IDE que se utilice.
 
- 
-### Estándar de Codificación Utilizado
+## Estándar de Codificación Utilizado
 
-> Para garantizar la consistencia y calidad del código, seguimos las **Java Code Conventions** establecidas por Oracle. Estas convenciones abordan las mejores prácticas de formateo, nomenclatura y organización del código.
+> Para garantizar la consistencia y calidad del código, seguimos las **Java Code Conventions** establecidas por Oracle. Estas convenciones abordan las mejores prácticas de formateo, nomenclatura y organización del código. Para los proyectos que utilizan **Apache Camel** y **Spring Boot**, hemos adaptado algunas reglas específicas, que se detallan más adelante.
 
-> La especificación completa está disponible en: [Java Code Conventions - Oracle](https://www.oracle.com/java/technologies/javase/codeconventions-introduction.html).
+> La especificación completa de las **Java Code Conventions** puede ser accedida en: [Java Code Conventions - Oracle](https://www.oracle.com/java/technologies/javase/codeconventions-introduction.html).
 
-#### Uso do Checkstyle
+## Configuración del Archivo Checkstyle
 
-> Checkstyle es una herramienta que ayuda a garantizar la consistencia y calidad del código, validando si sigue las reglas de estilo predefinidas. Se puede integrar tanto en el proceso de build de Gradle como en las principales IDEs (Eclipse, IntelliJ IDEA y VSCode).
+> El archivo `checkstyle.xml` contiene reglas específicas para garantizar que el código siga las convenciones de estilo y las mejores prácticas recomendadas. Entre estas reglas, destacamos las siguientes:
+> 
+> - **Tamaño máximo de línea**: Limita la longitud de las líneas de código a 120 caracteres, para garantizar la legibilidad.
+> - **Indentación y uso de espacios**: Definimos la indentación con 4 espacios y verificamos la organización de los imports y la correcta colocación de espacios en palabras clave.
+> - **Reglas específicas para el uso de Apache Camel y Spring Boot**: Hemos incluido verificaciones para garantizar que las clases relacionadas con Camel sigan convenciones de nomenclatura adecuadas y que el uso de logs esté alineado con las mejores prácticas para estas tecnologías.
+>
+> A continuación, presentamos el contenido del archivo `checkstyle.xml` para que sea posible realizar la configuración en las IDEs y en el build de Gradle.
 
-#### Configuración de Checkstyle
+#### Ejemplo de archivo `checkstyle.xml` (común a todas las IDEs)
 
-> Checkstyle depende de un archivo de configuración, normalmente llamado checkstyle.xml, que define las reglas de formateo y estilo del código. Este archivo puede ser utilizado de manera consistente en todas las herramientas para garantizar que todos los desarrolladores sigan las mismas convenciones de estilo.
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Checkstyle Configuration 1.3//EN" "http://checkstyle.sourceforge.net/dtds/configuration_1_3.dtd">
+<configuration>
+
+    <!-- Definiendo el tamaño máximo de línea para el código -->
+    <property name="lineLength" value="120"/>
+
+    <!-- Verificando la indentación del código con 4 espacios -->
+    <module name="Indentation">
+        <property name="basicOffset" value="4"/>
+        <property name="braceAdjustment" value="4"/>
+        <property name="lineWrappingIndentation" value="4"/>
+    </module>
+
+    <!-- Garantizando que las clases e interfaces sean nombradas correctamente -->
+    <module name="NamingConvention">
+        <property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
+    </module>
+
+    <!-- Verifica el uso de espacios después de palabras clave y antes de paréntesis -->
+    <module name="WhitespaceAround">
+        <property name="tokens" value="METHOD_DECLARATION, METHOD_CALL, ASSIGNMENT, LITERAL_IF, LITERAL_FOR, LITERAL_WHILE, LITERAL_DO"/>
+        <property name="checkSynthetic" value="true"/>
+    </module>
+
+    <!-- Verifica la organización de los imports -->
+    <module name="ImportOrder">
+        <property name="ordered" value="true"/>
+        <property name="separated" value="true"/>
+    </module>
+
+    <!-- Garantizar el uso de llaves en bloques de código -->
+    <module name="NeedBraces">
+        <property name="ignoreSingleLine" value="false"/>
+    </module>
+
+    <!-- Forzar el uso del modificador de acceso adecuado -->
+    <module name="VisibilityModifier">
+        <property name="applyTo" value="all"/>
+    </module>
+
+    <!-- Garantizar que métodos y variables sigan las convenciones de nomenclatura -->
+    <module name="MethodName">
+        <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+    </module>
+
+    <module name="LocalVariableName">
+        <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+    </module>
+
+    <!-- Garantizar que las clases sigan la convención de nomenclatura -->
+    <module name="ClassName">
+        <property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
+    </module>
+
+    <!-- Garantizar que la documentación JavaDoc esté presente -->
+    <module name="JavadocMethod">
+        <property name="minLines" value="3"/>
+        <property name="allowMissingParamTags" value="true"/>
+    </module>
+
+    <module name="JavadocType">
+        <property name="minLines" value="3"/>
+    </module>
+
+    <!-- Reglas específicas para uso con Camel -->
+    <module name="RegexpSingleline">
+        <property name="format" value=".*Camel.*"/>
+        <property name="message" value="Las clases relacionadas con Camel deben seguir las convenciones de nomenclatura adecuadas."/>
+    </module>
+
+    <!-- Reglas específicas para uso con Spring Boot -->
+    <module name="JavadocType">
+        <property name="minLines" value="2"/>
+    </module>
+
+    <!-- Definiendo la estructura de los paquetes -->
+    <module name="PackageName">
+        <property name="format" value="^[a-z][a-z0-9]*(\.[a-z][a-z0-9]*)*$"/>
+    </module>
+
+    <!-- Verificar que todos los métodos tengan excepciones documentadas -->
+    <module name="JavadocMethod">
+        <property name="checkExceptions" value="true"/>
+    </module>
+
+    <!-- Verificación para evitar código muerto -->
+    <module name="UnusedImports"/>
+
+    <!-- Reglas para garantizar que el código esté utilizando buenas prácticas -->
+    <module name="FinalLocalVariable"/>
+    <module name="FinalParameters"/>
+
+    <!-- Verificar el uso adecuado de logs (aplicable a Spring Boot, AWS, y Camel) -->
+    <module name="Regexp">
+        <property name="format" value=".*Logger.*"/>
+        <property name="message" value="El nombre del Logger debe ser declarado como 'LOG'."/>
+        <property name="illegalPattern" value=".*System\.out.*|.*System\.err.*"/>
+    </module>
+
+    <!-- Reglas para garantizar una buena formateo general -->
+    <module name="LineLength">´
+        <property name="max" value="120"/>
+    </module>
+
+</configuration>
+```
 	
-#### Integración con Gradle
+### Integración con Gradle
+Para integrar Checkstyle en Gradle, sigue estos pasos:
 
-> Para integrar Checkstyle en Gradle, agrega el plugin Checkstyle al archivo build.gradle y apunta al archivo checkstyle.xml que contiene las reglas.
+1. **Agregar el plugin de Checkstyle en el archivo `build.gradle`:**
+
+```bash
+plugins {
+    id 'checkstyle'
+}
+```
+
+2. **Configurar Checkstyle y el archivo `checkstyle.xml`:**
+```bash
+checkstyle {
+    toolVersion = '10.0' // Versión de Checkstyle
+    configFile = file('config/checkstyle/checkstyle.xml') // Ruta al archivo checkstyle.xml
+}
+
+```
+3. **Añadir la tarea de Checkstyle en el build:**
+```bash
+task checkstyleMain(type: Checkstyle) {
+    source 'src/main/java' // Código fuente
+    include '**/*.java' // Archivos Java a verificar
+    reports {
+        html.enabled = true // Informe en HTML
+        xml.enabled = true // Informe en XML
+    }
+}
+```
+- Con estos pasos, Checkstyle validará automáticamente tu código durante el proceso de build y generará informes sobre el cumplimiento de las reglas de estilo definidas en checkstyle.xml.
 
 ## Configuración en las IDEs 
 > Para identificar la configuración necesaria para tu IDE, haz clic en la IDE que usas y sigue el paso a paso. 
@@ -29,98 +169,3 @@
 - [VisualStudioCode](./vscode.md)
 - [Intellij](./intellij.md) 
 - [Eclipse](./eclispe.md)
-
-
-#### Ejemplo de archivo checkstyle.xml (común a todas las IDEs)
-
-``` bash
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE module PUBLIC "-//CHECKSTYLE//DTD Checkstyle Configuration 1.3//EN" "http://checkstyle.sourceforge.net/dtds/configuration_1_3.dtd">
-
-<configuration>
-
-    <!-- Definiendo reglas generales de Checkstyle -->
-    <module name="Checker">
-
-        <!-- Longitud de línea: Limita a 100 caracteres para facilitar la lectura, pero sin exceder 80 cuando sea posible -->
-        <module name="LineLength">
-            <property name="max" value="100"/>
-        </module>
-
-        <!-- Indentación: Usando 4 espacios, como recomienda Oracle -->
-        <module name="Indentation">
-            <property name="tabWidth" value="4"/>
-            <property name="indentation" value="4"/>
-        </module>
-
-        <!-- Reglas para los espacios en blanco alrededor de los operadores -->
-        <module name="WhitespaceAround">
-            <property name="checkSpaceBefore" value="true"/>
-            <property name="checkSpaceAfter" value="true"/>
-        </module>
-
-        <!-- Verificar el uso adecuado de Javadoc en métodos y clases -->
-        <module name="JavadocStyle">
-            <property name="allowMissingJavadoc" value="false"/>
-            <property name="minLines" value="1"/>
-        </module>
-
-        <!-- Verificar la convención de nombres de paquetes (minúsculas y estructura jerárquica) -->
-        <module name="PackageName">
-            <property name="format" value="^[a-z]+([.][a-z][a-z0-9_]*)*$"/>
-        </module>
-
-        <!-- Organizar las importaciones con reglas específicas -->
-        <module name="ImportOrder">
-            <property name="groups" value="javax, java, org, com"/>
-            <property name="separated" value="true"/>
-            <property name="ordered" value="true"/>
-        </module>
-
-        <!-- Definir convenciones para el nombre de métodos (camelCase) -->
-        <module name="MethodName">
-            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
-        </module>
-
-        <!-- Definir convenciones para el nombre de clases (PascalCase) -->
-        <module name="TypeName">
-            <property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
-        </module>
-
-        <!-- Los nombres de las variables deben usar la convención camelCase -->
-        <module name="VariableName">
-            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
-        </module>
-
-        <!-- Verificar el orden de los modificadores de acceso y la visibilidad de las clases -->
-        <module name="ModifiersOrder"/>
-
-        <!-- Limitar la complejidad de los métodos y funciones para evitar métodos demasiado complejos -->
-        <module name="CyclomaticComplexity">
-            <property name="threshold" value="10"/>
-        </module>
-
-        <!-- Regla para garantizar que los archivos no sean excesivamente grandes -->
-        <module name="FileLength">
-            <property name="max" value="1000"/>
-        </module>
-
-        <!-- Validar que el código no utilice caracteres tabulados (tab) para la indentación -->
-        <module name="FileTabCharacter">
-            <property name="useSpace" value="true"/>
-        </module>
-
-        <!-- Garantizar que haya una clase por archivo (Java) -->
-        <module name="SingleClassFile"/>
-
-        <!-- Asegurar que las clases tengan al menos una línea en blanco después de las importaciones -->
-        <module name="SeparatorLine">
-            <property name="lineCount" value="1"/>
-        </module>
-
-    </module>
-
-</configuration>
-
-
-

@@ -3,7 +3,7 @@
 **1. Instalar el Plugin Checkstyle
 Abra o IntelliJ IDEA.**
 
-- Ve a Archivo > Configuración (o IntelliJ IDEA > Preferencias en macOS).
+- Ve a Archivo > Configuración.
 
 - En el menú de configuraciones, selecciona Plugins.
 
@@ -27,7 +27,6 @@ Abra o IntelliJ IDEA.**
 - Para ejecutar Checkstyle manualmente, ve al menú Herramientas > Checkstyle > Verificar Código con Checkstyle.
 
 - Checkstyle analizará el código y mostrará los errores y advertencias basados en las reglas definidas en el archivo checkstyle.xml.
-
 
 
 **4. Corregir los Errores**
